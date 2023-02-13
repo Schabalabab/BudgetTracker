@@ -69,17 +69,23 @@ app.put("/api/v1/users/:id", (req,res) => {
 //id/expenses
 
 
-app.get("/api/v1/users/expenses/:userid", function (req, res) { //Function wird von express selbst ausgefüllt
+app.get("/api/v1/users/expenses/:id", function (req, res) { //Function wird von express selbst ausgefüllt
     const user = users.find(
         (user) => user.id === parseInt(req.params.id));
 
     if(!user) {
         return res.status(404)
-        .send("The item with the given ID was not found.");
+        .send("The user with the given ID was not found.");
     }
-    
 
-    res.json(expenses);
+    const expense = expenses.filter(
+        (expense) => expense.userid == parseInt(req.params.id));
+
+    if(!expense) {
+        return res.status(404)
+        .send("The expense with the given ID was not found.");
+    }
+    res.json(expense);
 });
 
 app.post("/api/v1/users/expenses", function (req, res) {
