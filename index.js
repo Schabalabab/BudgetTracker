@@ -65,7 +65,6 @@ app.put("/api/v1/users/:id", (req,res) => {
 //id/finances
 
 
-
 //id/expenses
 
 
@@ -86,6 +85,39 @@ app.get("/api/v1/users/expenses/:id", function (req, res) { //Function wird von 
         .send("The expense with the given ID was not found.");
     }
     res.json(expense);
+});
+
+app.post("/api/v1/users/expenses", function (req, res) {
+    const expense = {
+        userid: req.body.userid,
+        value: req.body.value,
+        description: req.body.description
+    }
+
+    expenses.push(expense);
+    res.json(expense);
+})
+
+//id/revenues
+
+
+app.get("/api/v1/users/revenues/:id", function (req, res) { //Function wird von express selbst ausgefüllt
+    const user = users.find(
+        (user) => user.id === parseInt(req.params.id));
+
+    if(!user) {
+        return res.status(404)
+        .send("The user with the given ID was not found.");
+    }
+
+    const revenue = revenues.filter(
+        (revenue) => revenues.userid == parseInt(req.params.id));
+
+    if(!revenue) {
+        return res.status(404)
+        .send("The revenue with the given ID was not found.");
+    }
+    res.json(revenue);
 });
 
 app.post("/api/v1/users/expenses", function (req, res) {
