@@ -16,6 +16,22 @@ const ROUTES = [
         }
     },
     {
+        url: '/revenues/**',
+        auth: false,
+        creditCheck: false,
+        rateLimit: {
+            windowMs: 15 * 60 * 1000,
+            max: 5
+        },
+        proxy: {
+            target: "http://localhost:3002/api/v1/users/revenues",
+            changeOrigin: true,
+            pathRewrite: {
+                [`^/revenues`]: '',
+            },
+        }
+    },
+    {
         url: '/revenues',
         auth: false,
         creditCheck: false,
@@ -24,7 +40,7 @@ const ROUTES = [
             max: 5
         },
         proxy: {
-            target: "http://localhost:3002/api/v1/revenues",
+            target: "http://localhost:3002/api/v1/users/revenues",
             changeOrigin: true,
             pathRewrite: {
                 [`^/revenues`]: '',
@@ -32,7 +48,7 @@ const ROUTES = [
         }
     },
     {
-        url: '/expenses',
+        url: '/expenses/**',
         auth: false,
         creditCheck: false,
         rateLimit: {
@@ -40,7 +56,7 @@ const ROUTES = [
             max: 5
         },
         proxy: {
-            target: "http://localhost:3003/api/v1/expenses",
+            target: "http://localhost:3003/api/v1/users/expenses",
             changeOrigin: true,
             pathRewrite: {
                 [`^/expenses`]: '',
@@ -48,7 +64,7 @@ const ROUTES = [
         }
     },
     {
-        url: '/finances',
+        url: '/finances/**',
         auth: false,
         creditCheck: false,
         rateLimit: {
@@ -56,7 +72,7 @@ const ROUTES = [
             max: 5
         },
         proxy: {
-            target: "http://localhost:3004/api/v1/finances",
+            target: "http://localhost:3004/api/v1/users/finances",
             changeOrigin: true,
             pathRewrite: {
                 [`^/finances`]: '',

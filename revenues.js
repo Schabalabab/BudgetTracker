@@ -4,6 +4,7 @@ const { system } = require("nodemon/lib/config");
 const app = express();
 
 let revenues = [];
+let users = [];
 
 app.use(bodyParser.json());
 
