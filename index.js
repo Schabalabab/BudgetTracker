@@ -134,15 +134,15 @@ app.get("/api/v1/users/revenues/:id", function (req, res) { //Function wird von 
     res.json(revenue);
 });
 
-app.post("/api/v1/users/expenses", function (req, res) {
+app.post("/api/v1/users/revenues", function (req, res) {
     const expense = {
         userid: req.body.userid,
         value: req.body.value,
         description: req.body.description
     }
 
-    expenses.push(expense);
-    res.json(expense);
+    revenues.push(revenue);
+    res.json(revenue);
 })
 
 app.listen(3000, function () {
