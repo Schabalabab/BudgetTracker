@@ -3,6 +3,8 @@ const bodyParser = require("body-parser");
 const { system } = require("nodemon/lib/config");
 const app = express();
 
+let expenses = [];
+
 app.use(bodyParser.json());
 
 

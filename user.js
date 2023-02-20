@@ -3,8 +3,10 @@ const bodyParser = require("body-parser");
 const { system } = require("nodemon/lib/config");
 const app = express();
 
-app.use(bodyParser.json());
+let users = [];
+let index = 0;
 
+app.use(bodyParser.json());
 
 app.get("/api/v1/users", (req, res) => {
     res.json(users);
