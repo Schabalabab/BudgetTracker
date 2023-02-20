@@ -1,5 +1,6 @@
 const express = require("express");
 const bodyParser = require("body-parser");
+const { system } = require("nodemon/lib/config");
 const app = express();
 
 app.use(bodyParser.json());
@@ -63,7 +64,9 @@ app.put("/api/v1/users/:id", (req,res) => {
 
 
 //id/finances
-
+//Get Expenses
+//Get Revenues
+//Saldo berechnen
 
 //id/expenses
 
@@ -88,10 +91,21 @@ app.get("/api/v1/users/expenses/:id", function (req, res) { //Function wird von 
 });
 
 app.post("/api/v1/users/expenses", function (req, res) {
+    var date=new Date();
+    day=date.getDate();
+    month=date.getMonth();
+    month=month+1;
+    if((String(day)).length==1)
+    day='0'+day;
+    if((String(month)).length==1)
+    month='0'+month;
+    dateT=day+ '.' + month + '.' + date.getFullYear();
+
     const expense = {
         userid: req.body.userid,
         value: req.body.value,
-        description: req.body.description
+        description: req.body.description,
+        date : dateT
     }
 
     expenses.push(expense);
@@ -130,33 +144,6 @@ app.post("/api/v1/users/expenses", function (req, res) {
     expenses.push(expense);
     res.json(expense);
 })
-
-app.delete("/api/items/:id", (req,res) => {
-    const item = items.find(
-        (item) => item.id === parseInt(req.params.id));
-
-    if(!item) {
-        return res.status(404)
-        .send("The item with the given ID was not found.");
-    }
-
-    const index = items.indexOf(item);
-    items.splice(index, 1);
-        
-});
-
-app.put("/api/items/:id", (req,res) => {
-    const item = items.find(
-        (item) => item.id === parseInt(req.params.id));
-
-    if(!item) {
-        return res.status(404)
-        .send("The item with the given ID was not found.");
-    }
-
-    item.name = req.body.name;
-    res.json(item);     
-});
 
 app.listen(3000, function () {
     console.log("API auf Port 3000 gestartet");
