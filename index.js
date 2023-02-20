@@ -10,6 +10,7 @@ let users = [];
 let index = 0;
 let expenses = [];
 let revenues = [];
+let finances = [];
 
 
 //v1
@@ -68,6 +69,43 @@ app.put("/api/v1/users/:id", (req,res) => {
 //Get Revenues
 //Saldo berechnen
 
+app.get("/api/v1/users/finances/:id", function (req, res) {
+    const user = users.find(
+        (user) => user.id === parseInt(req.params.id));
+
+    if(!user) {
+        return res.status(404)
+        .send("The user with the given ID was not found.");
+    }
+    const expense = expenses.filter(
+        (expense) => expense.userid == parseInt(req.params.id));
+    const revenue = revenues.filter(
+        (revenue) => revenue.userid == parseInt(req.params.id));
+    
+    let expense_all = 0
+    for (let i=0 ; i < expense.length; i++){
+        expense_all += parseInt(expense[i].value);
+    };
+
+    let revenue_all = 0
+    for (let i=0 ; i < revenue.length; i++){
+        revenue_all += parseInt(revenue[i].value);
+    };
+
+    const saldo = revenue_all - expense_all;
+    const finance = {
+        expenses: expense_all,
+        revenues: revenue_all,
+        saldo: saldo
+    }
+
+    finances.push(finance);
+
+    res.json(finance);
+    
+}
+)
+
 //id/expenses
 
 
@@ -125,7 +163,7 @@ app.get("/api/v1/users/revenues/:id", function (req, res) { //Function wird von 
     }
 
     const revenue = revenues.filter(
-        (revenue) => revenues.userid == parseInt(req.params.id));
+        (revenue) => revenue.userid == parseInt(req.params.id));
 
     if(!revenue) {
         return res.status(404)
@@ -135,10 +173,22 @@ app.get("/api/v1/users/revenues/:id", function (req, res) { //Function wird von 
 });
 
 app.post("/api/v1/users/revenues", function (req, res) {
-    const expense = {
+
+    var date=new Date();
+    day=date.getDate();
+    month=date.getMonth();
+    month=month+1;
+    if((String(day)).length==1)
+    day='0'+day;
+    if((String(month)).length==1)
+    month='0'+month;
+    dateT=day+ '.' + month + '.' + date.getFullYear();
+
+    const revenue = {
         userid: req.body.userid,
         value: req.body.value,
-        description: req.body.description
+        description: req.body.description,
+        date : dateT
     }
 
     revenues.push(revenue);
