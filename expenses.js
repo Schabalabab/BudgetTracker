@@ -1,3 +1,11 @@
+const express = require("express");
+const bodyParser = require("body-parser");
+const { system } = require("nodemon/lib/config");
+const app = express();
+
+app.use(bodyParser.json());
+
+
 app.get("/api/v1/users/expenses/:id", function (req, res) { //Function wird von express selbst ausgefüllt
     const user = users.find(
         (user) => user.id === parseInt(req.params.id));
@@ -38,3 +46,7 @@ app.post("/api/v1/users/expenses", function (req, res) {
     expenses.push(expense);
     res.json(expense);
 })
+
+app.listen(3003, function () {
+    console.log("Expenses-Service auf Port 3003 gestartet");
+});

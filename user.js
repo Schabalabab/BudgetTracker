@@ -1,3 +1,11 @@
+const express = require("express");
+const bodyParser = require("body-parser");
+const { system } = require("nodemon/lib/config");
+const app = express();
+
+app.use(bodyParser.json());
+
+
 app.get("/api/v1/users", (req, res) => {
     res.json(users);
 });
@@ -38,4 +46,8 @@ app.put("/api/v1/users/:id", (req,res) => {
 
     user.name = req.body.name;
     res.json(user);     
+});
+
+app.listen(3001, function () {
+    console.log("User-Service auf Port 3001 gestartet");
 });
