@@ -1,4 +1,5 @@
 const ROUTES = [
+    //get & post users
     {
         url: '/users',
         auth: false,
@@ -15,6 +16,7 @@ const ROUTES = [
             },
         }
     },
+    //get revenues
     {
         url: '/revenues/**',
         auth: false,
@@ -31,6 +33,7 @@ const ROUTES = [
             },
         }
     },
+    //post revenues
     {
         url: '/revenues',
         auth: false,
@@ -47,6 +50,7 @@ const ROUTES = [
             },
         }
     },
+    //get expenses
     {
         url: '/expenses/**',
         auth: false,
@@ -63,6 +67,24 @@ const ROUTES = [
             },
         }
     },
+    //post expenses
+    {
+        url: '/expenses',
+        auth: false,
+        creditCheck: false,
+        rateLimit: {
+            windowMs: 15 * 60 * 1000,
+            max: 5
+        },
+        proxy: {
+            target: "http://localhost:3003/api/v1/users/expenses",
+            changeOrigin: true,
+            pathRewrite: {
+                [`^/expenses`]: '',
+            },
+        }
+    },
+    //get finances
     {
         url: '/finances/**',
         auth: false,
