@@ -1,7 +1,7 @@
 const ROUTES = [
     //get & post users
     {
-        url: '/users',
+        url: '/getUsers',
         auth: false,
         creditCheck: false,
         rateLimit: {
@@ -9,10 +9,42 @@ const ROUTES = [
             max: 5
         },
         proxy: {
-            target: "http://localhost:3001/api/v1/users",
+            target: "http://localhost:3001/api/v1/getUsers",
             changeOrigin: true,
             pathRewrite: {
-                [`^/users`]: '',
+                [`^/getUsers`]: '',
+            },
+        }
+    },
+    {
+        url: '/postUsers',
+        auth: false,
+        creditCheck: false,
+        rateLimit: {
+            windowMs: 15 * 60 * 1000,
+            max: 5
+        },
+        proxy: {
+            target: "http://localhost:3001/api/v1/postUsers",
+            changeOrigin: true,
+            pathRewrite: {
+                [`^/postUsers`]: '',
+            },
+        }
+    },
+    {
+        url: '/deleteUsers/**',
+        auth: false,
+        creditCheck: false,
+        rateLimit: {
+            windowMs: 15 * 60 * 1000,
+            max: 5
+        },
+        proxy: {
+            target: "http://localhost:3001/api/v1/deleteUsers",
+            changeOrigin: true,
+            pathRewrite: {
+                [`^/deleteUsers`]: '',
             },
         }
     },

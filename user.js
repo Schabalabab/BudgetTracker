@@ -3,28 +3,40 @@ const bodyParser = require("body-parser");
 const { system } = require("nodemon/lib/config");
 const app = express();
 
+const mongoose = require('mongoose');
+const { json } = require("body-parser");
+mongoose.connect("mongodb+srv://Jeldrik:Lc8CCmQMlVwjpPx6@budgettracker.cceywm4.mongodb.net/userDB?retryWrites=true&w=majority").then(() => console.log("User-Datenbank connected"));
+const User = mongoose.model('User',{id: Number, name: String, password: String})
+const globalId = mongoose.model('globalID',{id: Number})
+
+
+/*const test = new User({id: 0, name: 'test', password: '1324'});
+test.save().then(() => console.log(test.name));*/
+
 let users = [];
 let index = 0;
 
 app.use(bodyParser.json());
 
-app.get("/api/v1/users", (req, res) => {
-    res.json(users);
+app.get("/api/v1/getUsers", (req, res) => {
+    User.find({
+        }).then(result => res.json(result))
 });
 
-app.post("/api/v1/users", (req,res) => {
-    const user = {
-        name: req.body.name,
+app.post("/api/v1/postUsers", (req,res) => {
+    //W-I-P
+    globalId.find().then(result => console.log())
+    globalId.findByIdAndUpdate('6407080ab0d1844e0e6345d9', { $inc: { globalID: 1 } })
+    const user = new User({
         id: index,
+        name: req.body.name,
         password: req.body.password
-    };
-
-    index += 1;
-    users.push(user);
+    });
+    user.save().then(() => console.log("gespeichert"))
     res.json(user);
 });
 
-app.delete("/api/v1/users/:id", (req,res) => {
+app.delete("/api/v1/deleteUsers/:id", (req,res) => {
     const user = users.find(
         (user) => user.id === parseInt(req.params.id));
 
