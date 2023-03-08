@@ -9,10 +9,6 @@ mongoose.connect("mongodb+srv://Jeldrik:Lc8CCmQMlVwjpPx6@budgettracker.cceywm4.m
 const Revenue = mongoose.model('Revenue',{userid: String, value: Number, description: String, date: String})
 const User = mongoose.model('User',{name: String, password: String})
 
-
-let revenues = [];
-let users = [];
-
 app.use(bodyParser.json());
 
 
@@ -29,7 +25,7 @@ app.get("/api/v1/users/getRevenues/:id", function (req, res) { //Function wird v
         })
     }
     else{
-        console.log("Die eingegebene ID muss eine länge von 24 haben")
+        console.log("Die angegebene ID muss eine länge von 24 haben")
     }
 
 });
@@ -51,7 +47,21 @@ app.post("/api/v1/users/postRevenues", function (req, res) {
         date : dateT
     })
     
-    revenue.save().then(() => console.log("Neue Revenue angelegt"));
+    if(req.params.id.toString().length == 24){
+        User.findOne({_id: revenue.userid}).then(result => {
+            if(result == null){
+                console.log("Die angegebene UserID existiert nicht")
+            }
+            else{
+                revenue.save().then(() => console.log("Neue Revenue angelegt"));
+            }
+        })
+    }
+    else{
+        console.log("Die angegebene ID muss eine länge von 24 haben")
+    }
+    
+    
 })
 
 app.listen(3002, function () {
