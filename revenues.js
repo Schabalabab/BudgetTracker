@@ -19,7 +19,7 @@ app.get("/api/v1/users/getRevenues/:id", function (req, res) { //Function wird v
                 console.log("Kein Nutzer mit dieser ID gefunden")
             }
             else{
-                Revenue.find({userid: req.params.id.toString()}).then(result => console.log(result))
+                Revenue.find({userid: req.params.id.toString()}).then(result => res.json(result))
                 console.log("Nutzer und Revenue gefunden")
             }
         })
@@ -46,8 +46,8 @@ app.post("/api/v1/users/postRevenues", function (req, res) {
         description: req.body.description,
         date : dateT
     })
-    
-    if(req.params.id.toString().length == 24){
+
+    if(req.body.userid.toString().length == 24){
         User.findOne({_id: revenue.userid}).then(result => {
             if(result == null){
                 console.log("Die angegebene UserID existiert nicht")
