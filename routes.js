@@ -50,7 +50,7 @@ const ROUTES = [
     },
     //get revenues
     {
-        url: '/revenues/**',
+        url: '/getRevenues/**',
         auth: false,
         creditCheck: false,
         rateLimit: {
@@ -58,16 +58,16 @@ const ROUTES = [
             max: 5
         },
         proxy: {
-            target: "http://localhost:3002/api/v1/users/revenues",
+            target: "http://localhost:3002/api/v1/users/getRevenues",
             changeOrigin: true,
             pathRewrite: {
-                [`^/revenues`]: '',
+                [`^/getRevenues`]: '',
             },
         }
     },
     //post revenues
     {
-        url: '/revenues',
+        url: '/postRevenues',
         auth: false,
         creditCheck: false,
         rateLimit: {
@@ -75,10 +75,10 @@ const ROUTES = [
             max: 5
         },
         proxy: {
-            target: "http://localhost:3002/api/v1/users/revenues",
+            target: "http://localhost:3002/api/v1/users/postRevenues",
             changeOrigin: true,
             pathRewrite: {
-                [`^/revenues`]: '',
+                [`^/postRevenues`]: '',
             },
         }
     },

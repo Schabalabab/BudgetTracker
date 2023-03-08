@@ -5,51 +5,39 @@ const app = express();
 
 const mongoose = require('mongoose');
 const { json } = require("body-parser");
-mongoose.connect("mongodb+srv://Jeldrik:Lc8CCmQMlVwjpPx6@budgettracker.cceywm4.mongodb.net/userDB?retryWrites=true&w=majority").then(() => console.log("User-Datenbank connected"));
-const User = mongoose.model('User',{id: Number, name: String, password: String})
-const globalId = mongoose.model('globalID',{id: Number})
+mongoose.connect("mongodb+srv://Jeldrik:Lc8CCmQMlVwjpPx6@budgettracker.cceywm4.mongodb.net/BudgetTrackerDB?retryWrites=true&w=majority").then(() => console.log("User-Datenbank verbunden"));
+const User = mongoose.model('User',{name: String, password: String})
 
-
-/*const test = new User({id: 0, name: 'test', password: '1324'});
-test.save().then(() => console.log(test.name));*/
-
-let users = [];
-let index = 0;
-
+//let users = [];
 app.use(bodyParser.json());
 
+// GET USER
 app.get("/api/v1/getUsers", (req, res) => {
-    User.find({
-        }).then(result => res.json(result))
+    User.find({}).then(result => res.json(result))
 });
 
+// CREATE USER
 app.post("/api/v1/postUsers", (req,res) => {
-    //W-I-P
-    globalId.find().then(result => console.log())
-    globalId.findByIdAndUpdate('6407080ab0d1844e0e6345d9', { $inc: { globalID: 1 } })
     const user = new User({
-        id: index,
         name: req.body.name,
         password: req.body.password
     });
-    user.save().then(() => console.log("gespeichert"))
-    res.json(user);
+    user.save().then(() => console.log("Neuer User angelegt"));
 });
 
+// DELETE USER
 app.delete("/api/v1/deleteUsers/:id", (req,res) => {
-    const user = users.find(
-        (user) => user.id === parseInt(req.params.id));
-
-    if(!user) {
-        return res.status(404)
-        .send("The user with the given ID was not found.");
-    }
-
-    const index = users.indexOf(user);
-    users.splice(index, 1);
+    User.deleteOne({ _id: req.params.id }).then(result => {
+        if(result.deletedCount == 0) {
+            console.log("User mit ID "+ req.params.id + " nicht gefunden")
+        }
+        else{
+            console.log("User mit ID "+ req.params.id + " gelöscht")
+        }})
 })
 
-app.put("/api/v1/users/:id", (req,res) => {
+// EDIT USER
+/*app.put("/api/v1/users/:id", (req,res) => {
     const user = users.find(
         (user) => user.id === parseInt(req.params.id));
 
@@ -60,8 +48,9 @@ app.put("/api/v1/users/:id", (req,res) => {
 
     user.name = req.body.name;
     res.json(user);     
-});
+});*/
 
+// LISTEN TO PORT
 app.listen(3001, function () {
     console.log("User-Service auf Port 3001 gestartet");
 });
