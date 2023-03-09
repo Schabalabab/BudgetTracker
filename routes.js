@@ -84,7 +84,7 @@ const ROUTES = [
     },
     //get expenses
     {
-        url: '/expenses/**',
+        url: '/getExpenses/**',
         auth: false,
         creditCheck: false,
         rateLimit: {
@@ -92,16 +92,16 @@ const ROUTES = [
             max: 5
         },
         proxy: {
-            target: "http://localhost:3003/api/v1/users/expenses",
+            target: "http://localhost:3003/api/v1/users/getExpenses",
             changeOrigin: true,
             pathRewrite: {
-                [`^/expenses`]: '',
+                [`^/getExpenses`]: '',
             },
         }
     },
     //post expenses
     {
-        url: '/expenses',
+        url: '/postExpenses',
         auth: false,
         creditCheck: false,
         rateLimit: {
@@ -109,16 +109,16 @@ const ROUTES = [
             max: 5
         },
         proxy: {
-            target: "http://localhost:3003/api/v1/users/expenses",
+            target: "http://localhost:3003/api/v1/users/postExpenses",
             changeOrigin: true,
             pathRewrite: {
-                [`^/expenses`]: '',
+                [`^/postExpenses`]: '',
             },
         }
     },
     //get finances
     {
-        url: '/finances/**',
+        url: '/getFinances/**',
         auth: false,
         creditCheck: false,
         rateLimit: {
@@ -126,10 +126,10 @@ const ROUTES = [
             max: 5
         },
         proxy: {
-            target: "http://localhost:3004/api/v1/users/finances",
+            target: "http://localhost:3004/api/v1/users/getFinances",
             changeOrigin: true,
             pathRewrite: {
-                [`^/finances`]: '',
+                [`^/getFinances`]: '',
             },
         }
     }

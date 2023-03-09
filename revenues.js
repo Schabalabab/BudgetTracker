@@ -3,9 +3,13 @@ const bodyParser = require("body-parser");
 const { system } = require("nodemon/lib/config");
 const app = express();
 
+var hateoasLinker = require('express-hateoas-links');
+app.use(hateoasLinker);
+
 const mongoose = require('mongoose');
 const { json } = require("body-parser");
-mongoose.connect("mongodb+srv://Jeldrik:Lc8CCmQMlVwjpPx6@budgettracker.cceywm4.mongodb.net/BudgetTrackerDB?retryWrites=true&w=majority").then(() => console.log("Revenue-Datenbank verbunden"));
+mongoose.connect("mongodb+srv://Jeldrik:Lc8CCmQMlVwjpPx6@budgettracker.cceywm4.mongodb.net/BudgetTrackerDB?retryWrites=true&w=majority")
+.then(() => console.log("Revenue-Datenbank verbunden"));
 const Revenue = mongoose.model('Revenue',{userid: String, value: Number, description: String, date: String})
 const User = mongoose.model('User',{name: String, password: String})
 
@@ -17,15 +21,19 @@ app.get("/api/v1/users/getRevenues/:id", function (req, res) { //Function wird v
         User.findOne({ _id: req.params.id }).then(result => {
             if(result == null){
                 console.log("Kein Nutzer mit dieser ID gefunden")
+                return res.status(400).send("Kein Nutzer mit dieser ID gefunden")
             }
             else{
-                Revenue.find({userid: req.params.id.toString()}).then(result => res.json(result))
+                Revenue.find({userid: req.params.id.toString()}).then(result => res.json(result, [
+                    { rel: "self", method: "GET", href: 'http://127.0.0.1' },
+                    { rel: "create", method: "POST", title: 'Create Person', href: 'http://127.0.0.1/person' }]))
                 console.log("Nutzer und Revenue gefunden")
             }
         })
     }
     else{
-        console.log("Die angegebene ID muss eine länge von 24 haben")
+        console.log("Die angegebene ID muss eine Länge von 24 haben")
+        return res.status(400).send("ID muss eine Länge von 24 haben")
     }
 
 });
@@ -51,14 +59,17 @@ app.post("/api/v1/users/postRevenues", function (req, res) {
         User.findOne({_id: revenue.userid}).then(result => {
             if(result == null){
                 console.log("Die angegebene UserID existiert nicht")
+                return res.status(400).send("Kein Nutzer mit dieser ID gefunden")
             }
             else{
                 revenue.save().then(() => console.log("Neue Revenue angelegt"));
+                return res.status(200).send("Neue Revenue angelegt")
             }
         })
     }
     else{
         console.log("Die angegebene ID muss eine länge von 24 haben")
+        return res.status(400).send("Die angegebene ID muss eine länge von 24 haben")
     }
     
     
