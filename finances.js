@@ -3,6 +3,9 @@ const bodyParser = require("body-parser");
 const { system } = require("nodemon/lib/config");
 const app = express();
 
+var hateoasLinker = require('express-hateoas-links');
+app.use(hateoasLinker);
+
 const mongoose = require('mongoose');
 const { json } = require("body-parser");
 mongoose.connect("mongodb+srv://Jeldrik:Lc8CCmQMlVwjpPx6@budgettracker.cceywm4.mongodb.net/BudgetTrackerDB?retryWrites=true&w=majority")
@@ -55,7 +58,10 @@ app.get("/api/v1/users/getFinances/:id", async function (req, res) {
                 saldo: saldo
             })
             finance.save().then(() => console.log("Neue Finance angelegt"))
-            res.json(finance)
+            res.status(200).json(finance, [ 
+            { rel: "user", method: "GET", href: 'http://localhost:3000/getUsers' },
+            { rel: "expenses", method: "GET", href: 'http://localhost:3000/getExpenses/' + req.params.id },
+            { rel: "revenues", method: "GET", href: 'http://localhost:3000/getRevenues/' + req.params.id }])
 
         }else{
             Console.log("Die ID muss eine Länge von 24 haben")

@@ -24,9 +24,7 @@ app.get("/api/v1/users/getRevenues/:id", function (req, res) { //Function wird v
                 return res.status(400).send("Kein Nutzer mit dieser ID gefunden")
             }
             else{
-                Revenue.find({userid: req.params.id.toString()}).then(result => res.json(result, [
-                    { rel: "self", method: "GET", href: 'http://127.0.0.1' },
-                    { rel: "create", method: "POST", title: 'Create Person', href: 'http://127.0.0.1/person' }]))
+                Revenue.find({userid: req.params.id.toString()}).then(result => res.json(result))
                 console.log("Nutzer und Revenue gefunden")
             }
         })
