@@ -1,14 +1,28 @@
 const express = require("express");
 const bodyParser = require("body-parser");
+const { system } = require("nodemon/lib/config");
+const {ROUTES} = require("./routes");
+const {setupProxies} = require("./proxy");
+
+const mongoose = require('mongoose');
+//mongoose.connect("mongodb+srv://Jeldrik:Lc8CCmQMlVwjpPx6@budgettracker.cceywm4.mongodb.net/catsDB?retryWrites=true&w=majority").then(() => console.log("Datenbank connected"));
+
+/*const Cat = mongoose.model('Cat', { name: String });
+const kitty = new Cat({ name: 'Zildjian' });
+kitty.save().then(() => console.log('meow'));
+
+Cat.find({
+    name: 'Zildjian'
+}).then(result => console.log(result))
+
+Cat.deleteMany({
+    name: 'Zildjian'
+}).then(result => console.log(result))*/
+
 const app = express();
 
+setupProxies(app, ROUTES);
 app.use(bodyParser.json());
-
-//let items = [];
-let users = [];
-let index = 0;
-let expenses = [];
-let revenues = [];
 
 
 //v1
@@ -19,144 +33,23 @@ app.get("/api/v1", (req, res) => {
 
 
 //users
-app.get("/api/v1/users", (req, res) => {
-    res.json(users);
-});
+app.get("/api/v1/getUsers", (req, res) => {})
+app.post("/api/v1/postUsers", (req,res) => {})
+app.delete("/api/v1/users/:id", (req,res) => {})
+app.put("/api/v1/users/:id", (req,res) => {})
 
-app.post("/api/v1/users", (req,res) => {
-    const user = {
-        name: req.body.name,
-        id: index,
-        password: req.body.password
-    };
+//finances
+app.get("/api/v1/users/finances/:id", function (req, res) {})
 
-    index += 1;
-    users.push(user);
-    res.json(user);
-});
+//expenses
+app.get("/api/v1/users/expenses/:id", function (req, res) {})
 
-app.delete("/api/v1/users/:id", (req,res) => {
-    const user = users.find(
-        (user) => user.id === parseInt(req.params.id));
+app.post("/api/v1/users/expenses", function (req, res) {})
 
-    if(!user) {
-        return res.status(404)
-        .send("The user with the given ID was not found.");
-    }
+//revenues
+app.get("/api/v1/users/revenues/:id", function (req, res) {});
 
-    const index = users.indexOf(user);
-    users.splice(index, 1);
-})
-
-app.put("/api/v1/users/:id", (req,res) => {
-    const user = users.find(
-        (user) => user.id === parseInt(req.params.id));
-
-    if(!user) {
-        return res.status(404)
-        .send("The item with the given ID was not found.");
-    }
-
-    user.name = req.body.name;
-    res.json(user);     
-});
-
-
-//id/finances
-
-
-//id/expenses
-
-
-app.get("/api/v1/users/expenses/:id", function (req, res) { //Function wird von express selbst ausgefüllt
-    const user = users.find(
-        (user) => user.id === parseInt(req.params.id));
-
-    if(!user) {
-        return res.status(404)
-        .send("The user with the given ID was not found.");
-    }
-
-    const expense = expenses.filter(
-        (expense) => expense.userid == parseInt(req.params.id));
-
-    if(!expense) {
-        return res.status(404)
-        .send("The expense with the given ID was not found.");
-    }
-    res.json(expense);
-});
-
-app.post("/api/v1/users/expenses", function (req, res) {
-    const expense = {
-        userid: req.body.userid,
-        value: req.body.value,
-        description: req.body.description
-    }
-
-    expenses.push(expense);
-    res.json(expense);
-})
-
-//id/revenues
-
-
-app.get("/api/v1/users/revenues/:id", function (req, res) { //Function wird von express selbst ausgefüllt
-    const user = users.find(
-        (user) => user.id === parseInt(req.params.id));
-
-    if(!user) {
-        return res.status(404)
-        .send("The user with the given ID was not found.");
-    }
-
-    const revenue = revenues.filter(
-        (revenue) => revenues.userid == parseInt(req.params.id));
-
-    if(!revenue) {
-        return res.status(404)
-        .send("The revenue with the given ID was not found.");
-    }
-    res.json(revenue);
-});
-
-app.post("/api/v1/users/expenses", function (req, res) {
-    const expense = {
-        userid: req.body.userid,
-        value: req.body.value,
-        description: req.body.description
-    }
-
-    expenses.push(expense);
-    res.json(expense);
-})
-
-app.delete("/api/items/:id", (req,res) => {
-    const item = items.find(
-        (item) => item.id === parseInt(req.params.id));
-
-    if(!item) {
-        return res.status(404)
-        .send("The item with the given ID was not found.");
-    }
-
-    const index = items.indexOf(item);
-    items.splice(index, 1);
-        
-});
-
-app.put("/api/items/:id", (req,res) => {
-    const item = items.find(
-        (item) => item.id === parseInt(req.params.id));
-
-    if(!item) {
-        return res.status(404)
-        .send("The item with the given ID was not found.");
-    }
-
-    item.name = req.body.name;
-    res.json(item);     
-});
+app.post("/api/v1/users/revenues", function (req, res) {})
 
 app.listen(3000, function () {
     console.log("API auf Port 3000 gestartet");
